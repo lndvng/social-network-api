@@ -20,13 +20,13 @@ const reactionSchema = new Schema (
 		createdAt: {
 			type: Date,
 			default: Date.now,
-			get: (date) => {
-				return dayjs(date).format('LLL');
-			},
+            get: (date) => {
+				const formattedDate = dayjs(date).format('LLL');
+				return formattedDate;
+			}
 		},
 	}
 );
-
 
 // Schema to create thought Model
 const thoughtSchema = new Schema (
@@ -41,8 +41,8 @@ const thoughtSchema = new Schema (
 			type: Date,
 			default: Date.now,
             get: (date) => {
-				return dayjs(date).format('LLL');
-				// add dayjs
+				const formattedDate = dayjs(date).format('LLL');
+				return formattedDate;
 			}
 		},
 		username: {
