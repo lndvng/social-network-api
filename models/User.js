@@ -5,31 +5,28 @@ const userSchema = new Schema (
 	{
 		username: {
 			type: String,
-			// ?? is this correct for unique?
 			unique: true,
 			required: true,
-			trim: true
+			trim: true,
 		},
 		email: {
 			type: String,
 			unique: true,
 			required: true,
-			// ?? is this validator correct?
-			validate: {
-				validator: () => Promise.resolve(false),
-				message: 'Email validation failed'
+			match: [/.+@.+\..+/, "Not a valid email"],
+		},
+		thoughts: [
+			{
+			type: Schema.Types.ObjectId,
+			ref: "thought",
 			}
-		},
-		thoughts: {
-			// ??
+		],
+		friends: [
+			{
 			type: Schema.Types.ObjectId,
-			ref: "Thought"
-		},
-		friends: {
-			// ??
-			type: Schema.Types.ObjectId,
-			ref: "User"
-		}
+			ref: "user",
+			}
+		]
 	},
 	{
 		toJSON: {
@@ -43,8 +40,7 @@ userSchema
 	.virtual('friendCount')
 	// Getter
 	.get(function () {
-		return `${this.friends.length}`;
-		// do i need a setter?
+		return this.friends.length;
 	});
 
 // Initialize User model

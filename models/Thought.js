@@ -1,4 +1,29 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
+
+// Schema for reactions
+const reactionSchema = new Schema (
+	{
+		reactionId: {
+			type: Schema.Types.ObjectId,
+			default: () => new Types.ObjectId(),
+		},
+		reactionBody: {
+			type: String,
+			required: true,
+			maxLength: 280,
+		},
+		username: {
+			type: String,
+			required: true,
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now,
+			// getter to format timestamp
+		},
+	}
+);
+
 
 // Schema to create thought Model
 const thoughtSchema = new Schema (
@@ -7,23 +32,21 @@ const thoughtSchema = new Schema (
 			type: String,
 			required: true,
 			minLength: 1,
-            maxLength: 280
+            maxLength: 280,
 		},
 		createdAt: {
 			type: Date,
-			timestamps: true,
-            // set default value to the current timestamp
-            // add getter method
+			default: Date.now,
+            get: (date) => {
+				return date
+				// add dayjs
+			}
 		},
 		username: {
 			type: String,
-			required: true
+			required: true,
 		},
-        // ?? is this correct?
-		reactions: {
-			type: Schema.Types.ObjectId,
-			ref: "thought"
-		}
+		reactions: [reactionSchema],
 	},
 	{
 		toJSON: {
