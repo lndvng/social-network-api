@@ -65,23 +65,33 @@ module.exports = {
         try {
             const thought = await Thought.findOneAndUpdate(
                 { _id: req.params.thoughtId },
-                { $push: reactions},
+                { $push: {
+                    reactions: {
+                        reactionBody: req.body.reactionBody,
+                        username: req.body.username
+                    }
+                }},
                 { runValidators: true, new: true }
             );
         if (!thought) {
             return res.status(404).json({ message: 'No thought with that ID'});
         }
-        res.json(user);
+        res.json(thought);
         } catch (err) {
+            console.log(err)
             res.status(500).json(err);
         }
     }, 
     // Delete a reaction
     async deleteReaction(req, res) {
         try {
-            const thought = await Thought.findOneAndDelete(
+            const thought = await Thought.findOneAndUpdate(
                 { _id: req.params.thoughtId },
-                { $pull: reactions},
+                { $pull: {
+                    reactions: {
+                        reactionId: req.params.reactionId
+                    }
+                }},
                 { new: true }
             );
         if(!thought) {
